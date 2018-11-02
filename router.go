@@ -103,7 +103,7 @@ func (router *Router) Handle(method string, path string, handle http.HandlerFunc
 	}
 
 	if router.prefix != "" {
-		path = router.prefix + "/" + path
+		path = fmt.Sprintf("%s/%s", router.prefix, path)
 	}
 
 	root.Add(path, handle, router.middleware...)
@@ -250,20 +250,19 @@ func (router *Router) matchAndParse(requestUrl string, path string) (paramsMapTy
 			res := strings.Split(matchStr, ":")
 
 			matchName = append(matchName, res[0])
-
-			sTemp = sTemp + "/" + "(" + res[1] + ")"
+			sTemp = fmt.Sprintf("%s/(%s)", sTemp, res[1])
 		} else if string(firstChar) == ":" {
 			matchStr := str
 			res := strings.Split(matchStr, ":")
 			matchName = append(matchName, res[1])
 
 			if res[1] == idKey {
-				sTemp = sTemp + "/" + "(" + idPattern + ")"
+				sTemp = fmt.Sprintf("%s/(%s)", sTemp, idPattern)
 			} else {
-				sTemp = sTemp + "/" + "(" + defaultPattern + ")"
+				sTemp = fmt.Sprintf("%s/(%s)", sTemp, defaultPattern)
 			}
 		} else {
-			sTemp = sTemp + "/" + str
+			sTemp = fmt.Sprintf("%s/%s", sTemp, str)
 		}
 	}
 
